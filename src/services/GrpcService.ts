@@ -345,16 +345,7 @@ export abstract class GrpcService implements IOpenable, IConfigurable, IReferenc
         return packageObject;
     }
 
-    /**
-     * Registers a method in GRPC service.
-     * 
-     * @param name          a method name
-     * @param schema        a validation schema to validate received parameters.
-     * @param action        an action function that is called when operation is invoked.
-     */
-    protected registerMethod(name: string, schema: Schema, action: (call: any) => Promise<any>): void {
-        if (this._implementation == null) return;
-
+    protected applyValidation(schema: Schema, action: (call: any) => Promise<any>): (call: any) => Promise<any> {
         // Create an action function
         let actionWrapper = async (call) => {
             // Validate object
@@ -374,9 +365,14 @@ export abstract class GrpcService implements IOpenable, IConfigurable, IReferenc
 
             let result = await action.call(this, call);
             return result;
-        }
+        };
 
-        // Apply interceptors
+        return actionWrapper;
+    }
+
+    protected applyInterceptors(action: (call: any) => Promise<any>): (call: any) => Promise<any> {
+        let actionWrapper = action;
+
         for (let index = this._interceptors.length - 1; index >= 0; index--) {
             let interceptor = this._interceptors[index];
             actionWrapper = ((action) => { 
@@ -385,6 +381,22 @@ export abstract class GrpcService implements IOpenable, IConfigurable, IReferenc
                 };
             })(actionWrapper);
         }
+
+        return actionWrapper;
+    }
+    
+    /**
+     * Registers a method in GRPC service.
+     * 
+     * @param name          a method name
+     * @param schema        a validation schema to validate received parameters.
+     * @param action        an action function that is called when operation is invoked.
+     */
+    protected registerMethod(name: string, schema: Schema, action: (call: any) => Promise<any>): void {
+        if (this._implementation == null) return;
+
+        let actionWrapper = this.applyValidation(schema, action);
+        actionWrapper = this.applyInterceptors(actionWrapper);
 
         // Assign method implementation
         this._implementation[name] = (call, callback) => { 
@@ -399,34 +411,6 @@ export abstract class GrpcService implements IOpenable, IConfigurable, IReferenc
     }    
 
     /**
-     * Registers a commandable method in this objects GRPC server (service) by the given name.,
-     * 
-     * @param method        the GRPC method name.
-     * @param schema        the schema to use for parameter validation.
-     * @param action        the action to perform at the given route.
-     */
-    protected registerCommadableMethod(method: string, schema: Schema,
-        action: (correlationId: string, data: any) => Promise<any>): void {
-
-        // Create an action function
-        let actionWrapper = (call, correlationId, data) => {
-            return action.call(this, correlationId, data);
-        };
-
-        // Apply interceptors
-        for (let index = this._interceptors.length - 1; index >= 0; index--) {
-            let interceptor = this._interceptors[index];
-            actionWrapper = ((action) => { 
-                return (call) => {
-                    return interceptor(call, action);
-                };
-            })(actionWrapper);
-        }
-
-        this._endpoint.registerCommadableMethod(method, schema, actionWrapper);
-    }
-
-    /**
      * Registers a method with authorization.
      * 
      * @param name          a method name
@@ -438,11 +422,23 @@ export abstract class GrpcService implements IOpenable, IConfigurable, IReferenc
         authorize: (call: any, next: (call: any) => Promise<any>) => Promise<any>,
         action: (call: any) => Promise<any>): void {
 
-        let actionWrapper = (call) => {
+        let actionWrapper = this.applyValidation(schema, action);
+        // Add authorization just before validation
+        actionWrapper = (call) => {
             return authorize(call, action);
         };
+        actionWrapper = this.applyInterceptors(actionWrapper);
 
-        this.registerMethod(name, schema, actionWrapper);
+        // Assign method implementation
+        this._implementation[name] = (call, callback) => { 
+            actionWrapper(call)
+            .then((result) => {
+                callback(null, result);
+            })
+            .catch((err) => {
+                callback(err, null);
+            }); 
+        };
     }    
 
     /**

@@ -293,16 +293,7 @@ class GrpcService {
         }
         return packageObject;
     }
-    /**
-     * Registers a method in GRPC service.
-     *
-     * @param name          a method name
-     * @param schema        a validation schema to validate received parameters.
-     * @param action        an action function that is called when operation is invoked.
-     */
-    registerMethod(name, schema, action) {
-        if (this._implementation == null)
-            return;
+    applyValidation(schema, action) {
         // Create an action function
         let actionWrapper = (call) => __awaiter(this, void 0, void 0, function* () {
             // Validate object
@@ -321,7 +312,10 @@ class GrpcService {
             let result = yield action.call(this, call);
             return result;
         });
-        // Apply interceptors
+        return actionWrapper;
+    }
+    applyInterceptors(action) {
+        let actionWrapper = action;
         for (let index = this._interceptors.length - 1; index >= 0; index--) {
             let interceptor = this._interceptors[index];
             actionWrapper = ((action) => {
@@ -330,6 +324,20 @@ class GrpcService {
                 };
             })(actionWrapper);
         }
+        return actionWrapper;
+    }
+    /**
+     * Registers a method in GRPC service.
+     *
+     * @param name          a method name
+     * @param schema        a validation schema to validate received parameters.
+     * @param action        an action function that is called when operation is invoked.
+     */
+    registerMethod(name, schema, action) {
+        if (this._implementation == null)
+            return;
+        let actionWrapper = this.applyValidation(schema, action);
+        actionWrapper = this.applyInterceptors(actionWrapper);
         // Assign method implementation
         this._implementation[name] = (call, callback) => {
             actionWrapper(call)
@@ -342,29 +350,6 @@ class GrpcService {
         };
     }
     /**
-     * Registers a commandable method in this objects GRPC server (service) by the given name.,
-     *
-     * @param method        the GRPC method name.
-     * @param schema        the schema to use for parameter validation.
-     * @param action        the action to perform at the given route.
-     */
-    registerCommadableMethod(method, schema, action) {
-        // Create an action function
-        let actionWrapper = (call, correlationId, data) => {
-            return action.call(this, correlationId, data);
-        };
-        // Apply interceptors
-        for (let index = this._interceptors.length - 1; index >= 0; index--) {
-            let interceptor = this._interceptors[index];
-            actionWrapper = ((action) => {
-                return (call) => {
-                    return interceptor(call, action);
-                };
-            })(actionWrapper);
-        }
-        this._endpoint.registerCommadableMethod(method, schema, actionWrapper);
-    }
-    /**
      * Registers a method with authorization.
      *
      * @param name          a method name
@@ -373,10 +358,22 @@ class GrpcService {
      * @param action        an action function that is called when operation is invoked.
      */
     registerMethodWithAuth(name, schema, authorize, action) {
-        let actionWrapper = (call) => {
+        let actionWrapper = this.applyValidation(schema, action);
+        // Add authorization just before validation
+        actionWrapper = (call) => {
             return authorize(call, action);
         };
-        this.registerMethod(name, schema, actionWrapper);
+        actionWrapper = this.applyInterceptors(actionWrapper);
+        // Assign method implementation
+        this._implementation[name] = (call, callback) => {
+            actionWrapper(call)
+                .then((result) => {
+                callback(null, result);
+            })
+                .catch((err) => {
+                callback(err, null);
+            });
+        };
     }
     /**
      * Registers a middleware for methods in GRPC endpoint.

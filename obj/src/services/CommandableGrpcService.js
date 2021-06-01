@@ -1,6 +1,18 @@
 "use strict";
+var __awaiter = (this && this.__awaiter) || function (thisArg, _arguments, P, generator) {
+    function adopt(value) { return value instanceof P ? value : new P(function (resolve) { resolve(value); }); }
+    return new (P || (P = Promise))(function (resolve, reject) {
+        function fulfilled(value) { try { step(generator.next(value)); } catch (e) { reject(e); } }
+        function rejected(value) { try { step(generator["throw"](value)); } catch (e) { reject(e); } }
+        function step(result) { result.done ? resolve(result.value) : adopt(result.value).then(fulfilled, rejected); }
+        step((generator = generator.apply(thisArg, _arguments || [])).next());
+    });
+};
 Object.defineProperty(exports, "__esModule", { value: true });
 exports.CommandableGrpcService = void 0;
+const pip_services3_commons_nodex_1 = require("pip-services3-commons-nodex");
+const pip_services3_commons_nodex_2 = require("pip-services3-commons-nodex");
+const pip_services3_commons_nodex_3 = require("pip-services3-commons-nodex");
 const GrpcService_1 = require("./GrpcService");
 /**
  * Abstract service that receives commands via GRPC protocol
@@ -67,6 +79,61 @@ class CommandableGrpcService extends GrpcService_1.GrpcService {
         super(null);
         this._name = name;
         this._dependencyResolver.put('controller', 'none');
+    }
+    applyCommand(schema, action) {
+        let actionWrapper = (call) => __awaiter(this, void 0, void 0, function* () {
+            let method = call.request.method;
+            let correlationId = call.request.correlation_id;
+            try {
+                // Convert arguments
+                let argsEmpty = call.request.args_empty;
+                let argsJson = call.request.args_json;
+                let args = !argsEmpty && argsJson ? pip_services3_commons_nodex_3.Parameters.fromJson(argsJson) : new pip_services3_commons_nodex_3.Parameters();
+                // Todo: Validate schema
+                if (schema) {
+                    //...
+                }
+                // Call command action
+                try {
+                    let result = yield action(correlationId, args);
+                    // Process result and generate response
+                    return {
+                        error: null,
+                        result_empty: result == null,
+                        result_json: result != null ? JSON.stringify(result) : null
+                    };
+                }
+                catch (ex) {
+                    return {
+                        error: pip_services3_commons_nodex_1.ErrorDescriptionFactory.create(ex),
+                        result_empty: true,
+                        result_json: null
+                    };
+                }
+            }
+            catch (ex) {
+                // Handle unexpected exception
+                let err = new pip_services3_commons_nodex_2.InvocationException(correlationId, "METHOD_FAILED", "Method " + method + " failed").wrap(ex).withDetails("method", method);
+                return {
+                    error: pip_services3_commons_nodex_1.ErrorDescriptionFactory.create(err),
+                    result_empty: true,
+                    result_json: null
+                };
+            }
+        });
+        return actionWrapper;
+    }
+    /**
+     * Registers a commandable method in this objects GRPC server (service) by the given name.,
+     *
+     * @param method        the GRPC method name.
+     * @param schema        the schema to use for parameter validation.
+     * @param action        the action to perform at the given route.
+     */
+    registerCommadableMethod(method, schema, action) {
+        let actionWrapper = this.applyCommand(schema, action);
+        actionWrapper = this.applyInterceptors(actionWrapper);
+        this._endpoint.registerCommadableMethod(method, schema, actionWrapper);
     }
     /**
      * Registers all service routes in HTTP endpoint.

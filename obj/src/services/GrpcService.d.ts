@@ -162,6 +162,8 @@ export declare abstract class GrpcService implements IOpenable, IConfigurable, I
     close(correlationId: string): Promise<void>;
     private registerService;
     private getServiceByName;
+    protected applyValidation(schema: Schema, action: (call: any) => Promise<any>): (call: any) => Promise<any>;
+    protected applyInterceptors(action: (call: any) => Promise<any>): (call: any) => Promise<any>;
     /**
      * Registers a method in GRPC service.
      *
@@ -170,14 +172,6 @@ export declare abstract class GrpcService implements IOpenable, IConfigurable, I
      * @param action        an action function that is called when operation is invoked.
      */
     protected registerMethod(name: string, schema: Schema, action: (call: any) => Promise<any>): void;
-    /**
-     * Registers a commandable method in this objects GRPC server (service) by the given name.,
-     *
-     * @param method        the GRPC method name.
-     * @param schema        the schema to use for parameter validation.
-     * @param action        the action to perform at the given route.
-     */
-    protected registerCommadableMethod(method: string, schema: Schema, action: (correlationId: string, data: any) => Promise<any>): void;
     /**
      * Registers a method with authorization.
      *

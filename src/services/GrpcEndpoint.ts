@@ -7,7 +7,6 @@ import { IConfigurable } from 'pip-services3-commons-nodex';
 import { IReferenceable } from 'pip-services3-commons-nodex';
 import { IReferences } from 'pip-services3-commons-nodex';
 import { ConfigParams } from 'pip-services3-commons-nodex';
-import { Parameters } from 'pip-services3-commons-nodex';
 import { CompositeLogger } from 'pip-services3-components-nodex';
 import { CompositeCounters } from 'pip-services3-components-nodex';
 import { ErrorDescriptionFactory } from 'pip-services3-commons-nodex';
@@ -333,8 +332,11 @@ export class GrpcEndpoint implements IOpenable, IConfigurable, IReferenceable {
 
         // Handle method not found
         if (action == null) {
-            let err = new InvocationException(correlationId, "METHOD_NOT_FOUND", "Method " + method + " was not found")
-                .withDetails("method", method);
+            let err = new InvocationException(
+                correlationId,
+                "METHOD_NOT_FOUND",
+                "Method " + method + " was not found"
+            ).withDetails("method", method);
             
             let response = { 
                 error: ErrorDescriptionFactory.create(err),
@@ -345,46 +347,7 @@ export class GrpcEndpoint implements IOpenable, IConfigurable, IReferenceable {
             return response;
         }
 
-        try {
-            // Convert arguments
-            let argsEmpty = call.request.args_empty;
-            let argsJson = call.request.args_json;
-            let args = !argsEmpty && argsJson ? Parameters.fromJson(argsJson) : new Parameters();
-
-            // Todo: Validate schema
-            let schema = this._commandableSchemas[method];
-            if (schema) {
-                //...
-            }
-
-            // Call command action
-            try {
-                let result = await action(call, correlationId, args);
-
-                // Process result and generate response
-                return {
-                    error: null,
-                    result_empty: result == null,
-                    result_json: result != null ? JSON.stringify(result): null 
-                };
-            } catch (ex) {
-                return {
-                    error: ErrorDescriptionFactory.create(ex),
-                    result_empty: true,
-                    result_json: null
-                };            
-            }
-        } catch (ex) {
-            // Handle unexpected exception
-            let err = new InvocationException(correlationId, "METHOD_FAILED", "Method " + method + " failed")
-                .wrap(ex).withDetails("method", method);
-        
-            return { 
-                error: ErrorDescriptionFactory.create(err),
-                result_empty: true,
-                result_json: null 
-            };
-        }
+        return await action(call);
     }
 
     /**
@@ -405,7 +368,7 @@ export class GrpcEndpoint implements IOpenable, IConfigurable, IReferenceable {
      * @param action        the action to perform at the given route.
      */
     public registerCommadableMethod(method: string, schema: Schema,
-        action: (call: any, correlationId: string, args: Parameters) => Promise<any>): void {
+        action: (call: any) => Promise<any>): void {
 
         this._commandableMethods = this._commandableMethods || {};
         this._commandableMethods[method] = action;
@@ -413,84 +376,5 @@ export class GrpcEndpoint implements IOpenable, IConfigurable, IReferenceable {
         this._commandableSchemas = this._commandableSchemas || {};
         this._commandableSchemas[method] = schema;
     }
-
-    // /**
-    //  * Registers an action in this objects GRPC server (service) by the given method and route.
-    //  * 
-    //  * @param method        the HTTP method of the route.
-    //  * @param route         the route to register in this object's GRPC server (service).
-    //  * @param schema        the schema to use for parameter validation.
-    //  * @param action        the action to perform at the given route.
-    //  */
-    // public registerRoute(method: string, route: string, schema: Schema,
-    //     action: (req: any, res: any) => void): void {
-    //     method = method.toLowerCase();
-    //     if (method == 'delete') method = 'del';
-
-    //     route = this.fixRoute(route);
-
-    //     // Hack!!! Wrapping action to preserve prototyping context
-    //     let actionCurl = (req, res) => { 
-    //         // Perform validation
-    //         if (schema != null) {
-    //             let params = _.extend({}, req.params, { body: req.body });
-    //             let correlationId = params.correlaton_id;
-    //             let err = schema.validateAndReturnException(correlationId, params, false);
-    //             if (err != null) {
-    //                 HttpResponseSender.sendError(req, res, err);
-    //                 return;
-    //             }
-    //         }
-
-    //         // Todo: perform verification?
-    //         action(req, res); 
-    //     };
-
-    //     // Wrapping to preserve "this"
-    //     let self = this;
-    //     this._server[method](route, actionCurl);
-    // }   
-    
-    // /**
-    //  * Registers an action with authorization in this objects GRPC server (service)
-    //  * by the given method and route.
-    //  * 
-    //  * @param method        the HTTP method of the route.
-    //  * @param route         the route to register in this object's GRPC server (service).
-    //  * @param schema        the schema to use for parameter validation.
-    //  * @param authorize     the authorization interceptor
-    //  * @param action        the action to perform at the given route.
-    //  */
-    // public registerRouteWithAuth(method: string, route: string, schema: Schema,
-    //     authorize: (req: any, res: any, next: () => void) => void,
-    //     action: (req: any, res: any) => void): void {
-            
-    //     if (authorize) {
-    //         let nextAction = action;
-    //         action = (req, res) => {
-    //             authorize(req, res, () => { nextAction(req, res); });
-    //         }
-    //     }
-
-    //     this.registerRoute(method, route, schema, action);
-    // }   
-
-    // /**
-    //  * Registers a middleware action for the given route.
-    //  * 
-    //  * @param route         the route to register in this object's GRPC server (service).
-    //  * @param action        the middleware action to perform at the given route.
-    //  */
-    // public registerInterceptor(route: string,
-    //     action: (req: any, res: any, next: () => void) => void): void {
-
-    //     route = this.fixRoute(route);
-
-    //     this._server.use((req, res, next) => {
-    //         if (route != null && route != "" && !req.url.startsWith(route))
-    //             next();
-    //         else action(req, res, next);
-    //     });
-    // }
 
 }

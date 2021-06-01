@@ -1,3 +1,4 @@
+import { Schema } from 'pip-services3-commons-nodex';
 import { GrpcService } from './GrpcService';
 /**
  * Abstract service that receives commands via GRPC protocol
@@ -63,6 +64,15 @@ export declare abstract class CommandableGrpcService extends GrpcService {
      * @param name a service name.
      */
     constructor(name: string);
+    private applyCommand;
+    /**
+     * Registers a commandable method in this objects GRPC server (service) by the given name.,
+     *
+     * @param method        the GRPC method name.
+     * @param schema        the schema to use for parameter validation.
+     * @param action        the action to perform at the given route.
+     */
+    protected registerCommadableMethod(method: string, schema: Schema, action: (correlationId: string, data: any) => Promise<any>): void;
     /**
      * Registers all service routes in HTTP endpoint.
      */

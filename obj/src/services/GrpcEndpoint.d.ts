@@ -3,7 +3,6 @@ import { IConfigurable } from 'pip-services3-commons-nodex';
 import { IReferenceable } from 'pip-services3-commons-nodex';
 import { IReferences } from 'pip-services3-commons-nodex';
 import { ConfigParams } from 'pip-services3-commons-nodex';
-import { Parameters } from 'pip-services3-commons-nodex';
 import { Schema } from 'pip-services3-commons-nodex';
 import { IRegisterable } from './IRegisterable';
 /**
@@ -143,5 +142,5 @@ export declare class GrpcEndpoint implements IOpenable, IConfigurable, IReferenc
      * @param schema        the schema to use for parameter validation.
      * @param action        the action to perform at the given route.
      */
-    registerCommadableMethod(method: string, schema: Schema, action: (call: any, correlationId: string, args: Parameters) => Promise<any>): void;
+    registerCommadableMethod(method: string, schema: Schema, action: (call: any) => Promise<any>): void;
 }

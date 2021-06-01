@@ -1,6 +1,10 @@
 /** @module services */
 import { ICommandable } from 'pip-services3-commons-nodex';
 import { CommandSet } from 'pip-services3-commons-nodex';
+import { ErrorDescriptionFactory } from 'pip-services3-commons-nodex';
+import { InvocationException } from 'pip-services3-commons-nodex';
+import { Parameters } from 'pip-services3-commons-nodex';
+import { Schema } from 'pip-services3-commons-nodex';
 
 import { GrpcService } from './GrpcService';
 
@@ -72,6 +76,74 @@ export abstract class CommandableGrpcService extends GrpcService {
         super(null);
         this._name = name;
         this._dependencyResolver.put('controller', 'none');
+    }
+
+    private applyCommand(schema: Schema, action: (correlationId: string, data: any) => Promise<any>): (call: any) => Promise<any> {
+        let actionWrapper = async (call) => {
+            let method = call.request.method;
+            let correlationId = call.request.correlation_id;
+
+            try {
+                // Convert arguments
+                let argsEmpty = call.request.args_empty;
+                let argsJson = call.request.args_json;
+                let args = !argsEmpty && argsJson ? Parameters.fromJson(argsJson) : new Parameters();
+
+                // Todo: Validate schema
+                if (schema) {
+                    //...
+                }
+
+                // Call command action
+                try {
+                    let result = await action(correlationId, args);
+
+                    // Process result and generate response
+                    return {
+                        error: null,
+                        result_empty: result == null,
+                        result_json: result != null ? JSON.stringify(result): null 
+                    };
+                } catch (ex) {
+                    return {
+                        error: ErrorDescriptionFactory.create(ex),
+                        result_empty: true,
+                        result_json: null
+                    };            
+                }
+            } catch (ex) {
+                // Handle unexpected exception
+                let err = new InvocationException(
+                    correlationId,
+                    "METHOD_FAILED",
+                    "Method " + method + " failed"
+                ).wrap(ex).withDetails("method", method);
+            
+                return { 
+                    error: ErrorDescriptionFactory.create(err),
+                    result_empty: true,
+                    result_json: null 
+                };
+            }
+        };
+
+        return actionWrapper;
+    }
+
+    /**
+     * Registers a commandable method in this objects GRPC server (service) by the given name.,
+     * 
+     * @param method        the GRPC method name.
+     * @param schema        the schema to use for parameter validation.
+     * @param action        the action to perform at the given route.
+     */
+     protected registerCommadableMethod(method: string, schema: Schema,
+        action: (correlationId: string, data: any) => Promise<any>): void {
+
+        let actionWrapper = this.applyCommand(schema, action);
+        actionWrapper = this.applyInterceptors(actionWrapper);
+
+        this._endpoint.registerCommadableMethod(method, schema, actionWrapper);
     }
 
     /**
