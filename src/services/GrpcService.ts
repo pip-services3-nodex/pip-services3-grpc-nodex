@@ -425,7 +425,7 @@ export abstract class GrpcService implements IOpenable, IConfigurable, IReferenc
         let actionWrapper = this.applyValidation(schema, action);
         // Add authorization just before validation
         actionWrapper = (call) => {
-            return authorize(call, action);
+            return authorize(call, actionWrapper);
         };
         actionWrapper = this.applyInterceptors(actionWrapper);
 
