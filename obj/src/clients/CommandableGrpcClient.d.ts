@@ -71,5 +71,5 @@ export declare class CommandableGrpcClient extends GrpcClient {
      * @param params            command parameters.
      * @returns the received result.
      */
-    protected callCommand(name: string, correlationId: string, params: any): Promise<any>;
+    protected callCommand<T>(name: string, correlationId: string, params: any): Promise<T>;
 }

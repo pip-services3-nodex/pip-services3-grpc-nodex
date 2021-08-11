@@ -13,5 +13,5 @@ export declare class TestGrpcClient extends GrpcClient {
      * @param request           (optional) request object.
      * @returns the received result.
      */
-    call(method: string, correlationId?: string, request?: any): Promise<any>;
+    call<T>(method: string, correlationId?: string, request?: any): Promise<any>;
 }

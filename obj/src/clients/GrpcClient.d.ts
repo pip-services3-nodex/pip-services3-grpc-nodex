@@ -157,5 +157,5 @@ export declare abstract class GrpcClient implements IOpenable, IConfigurable, IR
      * @param request           (optional) request object.
      * @returns the received result.
      */
-    protected call(method: string, correlationId?: string, request?: any): Promise<any>;
+    protected call<T>(method: string, correlationId?: string, request?: any): Promise<T>;
 }

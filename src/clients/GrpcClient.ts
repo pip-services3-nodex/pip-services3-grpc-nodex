@@ -320,7 +320,7 @@ export abstract class GrpcClient implements IOpenable, IConfigurable, IReference
      * @param request           (optional) request object.
      * @returns the received result.
      */
-    protected call(method: string, correlationId?: string, request: any = {}): Promise<any> {
+    protected call<T>(method: string, correlationId?: string, request: any = {}): Promise<T> {
         method = method.toLowerCase();
 
         return new Promise<any>((resolve, reject) => {

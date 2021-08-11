@@ -25,7 +25,7 @@ export class DummyGrpcClient extends GrpcClient implements IDummyClient {
 
     public async getDummyById(correlationId: string, dummyId: string): Promise<Dummy> {
         this.instrument(correlationId, 'dummy.get_one_by_id');
-        let result = await this.call('get_dummy_by_id',
+        let result = await this.call<any>('get_dummy_by_id',
             correlationId,
             {
                 dummy_id: dummyId
@@ -41,7 +41,7 @@ export class DummyGrpcClient extends GrpcClient implements IDummyClient {
 
     public async createDummy(correlationId: string, dummy: any): Promise<Dummy> {
         this.instrument(correlationId, 'dummy.create');
-        let result = await this.call('create_dummy',
+        let result = await this.call<any>('create_dummy',
             correlationId,
             {
                 dummy: dummy
@@ -57,7 +57,7 @@ export class DummyGrpcClient extends GrpcClient implements IDummyClient {
 
     public async updateDummy(correlationId: string, dummy: any): Promise<Dummy> {
         this.instrument(correlationId, 'dummy.update');
-        let result = await this.call('update_dummy',
+        let result = await this.call<any>('update_dummy',
             correlationId, 
             {
                 dummy: dummy
@@ -73,7 +73,7 @@ export class DummyGrpcClient extends GrpcClient implements IDummyClient {
 
     public async deleteDummy(correlationId: string, dummyId: string): Promise<Dummy> {
         this.instrument(correlationId, 'dummy.delete_by_id');
-        let result = await this.call('delete_dummy_by_id',
+        let result = await this.call<any>('delete_dummy_by_id',
             correlationId, 
             {
                 dummy_id: dummyId

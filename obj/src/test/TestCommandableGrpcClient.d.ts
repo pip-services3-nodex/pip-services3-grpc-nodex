@@ -17,5 +17,5 @@ export declare class TestCommandableGrpcClient extends CommandableGrpcClient {
      * @param params            command parameters.
      * @returns the received result.
      */
-    callCommand(name: string, correlationId: string, params: any): Promise<any>;
+    callCommand<T>(name: string, correlationId: string, params: any): Promise<any>;
 }

@@ -79,7 +79,7 @@ export class CommandableGrpcClient extends GrpcClient {
      * @param params            command parameters.
      * @returns the received result.
      */
-    protected async callCommand(name: string, correlationId: string, params: any): Promise<any> {
+    protected async callCommand<T>(name: string, correlationId: string, params: any): Promise<T> {
         let method = this._name + '.' + name;
         let timing = this.instrument(correlationId, method);
 
@@ -91,7 +91,7 @@ export class CommandableGrpcClient extends GrpcClient {
         };
 
         try {
-            let response = await this.call("invoke", correlationId, request);
+            let response = await this.call<any>("invoke", correlationId, request);
 
             // Handle error response
             if (response.error != null) {

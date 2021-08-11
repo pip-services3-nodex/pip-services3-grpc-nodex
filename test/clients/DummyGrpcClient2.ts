@@ -36,7 +36,7 @@ export class DummyGrpcClient2 extends GrpcClient implements IDummyClient {
 
         this.instrument(correlationId, 'dummy.get_page_by_filter');
 
-        let result = await this.call('get_dummies',
+        let result = await this.call<any>('get_dummies',
             correlationId, 
             request
         );
@@ -56,7 +56,7 @@ export class DummyGrpcClient2 extends GrpcClient implements IDummyClient {
 
         this.instrument(correlationId, 'dummy.get_one_by_id');
 
-        let result = await this.call('get_dummy_by_id',
+        let result = await this.call<any>('get_dummy_by_id',
             correlationId,
             request
         );
@@ -80,7 +80,7 @@ export class DummyGrpcClient2 extends GrpcClient implements IDummyClient {
 
         this.instrument(correlationId, 'dummy.create');
 
-        let result = await this.call('create_dummy',
+        let result = await this.call<any>('create_dummy',
             correlationId,
             request
         );
@@ -104,7 +104,7 @@ export class DummyGrpcClient2 extends GrpcClient implements IDummyClient {
     
         this.instrument(correlationId, 'dummy.update');
 
-        let result = await this.call('update_dummy',
+        let result = await this.call<any>('update_dummy',
             correlationId, 
             request
         );
@@ -123,7 +123,7 @@ export class DummyGrpcClient2 extends GrpcClient implements IDummyClient {
 
         this.instrument(correlationId, 'dummy.delete_by_id');
 
-        let result = await this.call('delete_dummy_by_id',
+        let result = await this.call<any>('delete_dummy_by_id',
             correlationId, 
             request
         );
