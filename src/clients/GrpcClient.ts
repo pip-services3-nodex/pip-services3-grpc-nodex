@@ -9,7 +9,8 @@ import { IReferences } from 'pip-services3-commons-nodex';
 import { ConfigParams } from 'pip-services3-commons-nodex';
 import { CompositeLogger } from 'pip-services3-components-nodex';
 import { CompositeCounters } from 'pip-services3-components-nodex';
-import { CounterTiming } from 'pip-services3-components-nodex';
+import { CompositeTracer } from 'pip-services3-components-nodex';
+import { InstrumentTiming } from 'pip-services3-rpc-nodex';
 import { ConnectionException } from 'pip-services3-commons-nodex';
 import { HttpConnectionResolver } from 'pip-services3-rpc-nodex';
 
@@ -102,6 +103,10 @@ export abstract class GrpcClient implements IOpenable, IConfigurable, IReference
      */
     protected _counters: CompositeCounters = new CompositeCounters();
     /**
+     * The tracer.
+     */
+    protected _tracer: CompositeTracer = new CompositeTracer();
+     /**
      * The configuration options.
      */
     protected _options: ConfigParams = new ConfigParams();
@@ -147,6 +152,7 @@ export abstract class GrpcClient implements IOpenable, IConfigurable, IReference
 	public setReferences(references: IReferences): void {
 		this._logger.setReferences(references);
 		this._counters.setReferences(references);
+        this._tracer.setReferences(references);
 		this._connectionResolver.setReferences(references);
 	}
 
@@ -158,30 +164,34 @@ export abstract class GrpcClient implements IOpenable, IConfigurable, IReference
      * @param name              a method name.
      * @returns CounterTiming object to end the time measurement.
      */
-	protected instrument(correlationId: string, name: string): CounterTiming {
+	protected instrument(correlationId: string, name: string): InstrumentTiming {
         this._logger.trace(correlationId, "Executing %s method", name);
-        this._counters.incrementOne(name + ".call_count");
-		return this._counters.beginTiming(name + ".call_time");
-	}
+        this._counters.incrementOne(name + ".call_time");
 
-    /**
-     * Adds instrumentation to error handling.
-     * 
-     * @param correlationId     (optional) transaction id to trace execution through call chain.
-     * @param name              a method name.
-     * @param err               an occured error
-     * @param result            (optional) an execution result
-     * @param callback          (optional) an execution callback
-     */
-    protected instrumentError(correlationId: string, name: string, err: any,
-        result: any = null, callback: (err: any, result: any) => void = null): void {
-        if (err != null) {
-            this._logger.error(correlationId, err, "Failed to call %s method", name);
-            this._counters.incrementOne(name + '.call_errors');    
-        }
-
-        if (callback) callback(err, result);
+		let counterTiming = this._counters.beginTiming(name + ".call_time");
+        let traceTiming = this._tracer.beginTrace(correlationId, name, null);
+        return new InstrumentTiming(correlationId, name, "exec",
+            this._logger, this._counters, counterTiming, traceTiming);
     }
+
+    // /**
+    //  * Adds instrumentation to error handling.
+    //  * 
+    //  * @param correlationId     (optional) transaction id to trace execution through call chain.
+    //  * @param name              a method name.
+    //  * @param err               an occured error
+    //  * @param result            (optional) an execution result
+    //  * @param callback          (optional) an execution callback
+    //  */
+    // protected instrumentError(correlationId: string, name: string, err: any,
+    //     result: any = null, callback: (err: any, result: any) => void = null): void {
+    //     if (err != null) {
+    //         this._logger.error(correlationId, err, "Failed to call %s method", name);
+    //         this._counters.incrementOne(name + '.call_errors');    
+    //     }
+
+    //     if (callback) callback(err, result);
+    // }
 
     /**
 	 * Checks if the component is opened.

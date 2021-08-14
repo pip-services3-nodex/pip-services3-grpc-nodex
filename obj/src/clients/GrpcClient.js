@@ -16,8 +16,10 @@ const fs = require('fs');
 const pip_services3_commons_nodex_1 = require("pip-services3-commons-nodex");
 const pip_services3_components_nodex_1 = require("pip-services3-components-nodex");
 const pip_services3_components_nodex_2 = require("pip-services3-components-nodex");
-const pip_services3_commons_nodex_2 = require("pip-services3-commons-nodex");
+const pip_services3_components_nodex_3 = require("pip-services3-components-nodex");
 const pip_services3_rpc_nodex_1 = require("pip-services3-rpc-nodex");
+const pip_services3_commons_nodex_2 = require("pip-services3-commons-nodex");
+const pip_services3_rpc_nodex_2 = require("pip-services3-rpc-nodex");
 /**
  * Abstract client that calls remove endpoints using GRPC protocol.
  *
@@ -76,7 +78,7 @@ class GrpcClient {
         /**
          * The connection resolver.
          */
-        this._connectionResolver = new pip_services3_rpc_nodex_1.HttpConnectionResolver();
+        this._connectionResolver = new pip_services3_rpc_nodex_2.HttpConnectionResolver();
         /**
          * The logger.
          */
@@ -86,8 +88,12 @@ class GrpcClient {
          */
         this._counters = new pip_services3_components_nodex_2.CompositeCounters();
         /**
-         * The configuration options.
+         * The tracer.
          */
+        this._tracer = new pip_services3_components_nodex_3.CompositeTracer();
+        /**
+        * The configuration options.
+        */
         this._options = new pip_services3_commons_nodex_1.ConfigParams();
         /**
          * The connection timeout in milliseconds.
@@ -122,6 +128,7 @@ class GrpcClient {
     setReferences(references) {
         this._logger.setReferences(references);
         this._counters.setReferences(references);
+        this._tracer.setReferences(references);
         this._connectionResolver.setReferences(references);
     }
     /**
@@ -134,26 +141,28 @@ class GrpcClient {
      */
     instrument(correlationId, name) {
         this._logger.trace(correlationId, "Executing %s method", name);
-        this._counters.incrementOne(name + ".call_count");
-        return this._counters.beginTiming(name + ".call_time");
+        this._counters.incrementOne(name + ".call_time");
+        let counterTiming = this._counters.beginTiming(name + ".call_time");
+        let traceTiming = this._tracer.beginTrace(correlationId, name, null);
+        return new pip_services3_rpc_nodex_1.InstrumentTiming(correlationId, name, "exec", this._logger, this._counters, counterTiming, traceTiming);
     }
-    /**
-     * Adds instrumentation to error handling.
-     *
-     * @param correlationId     (optional) transaction id to trace execution through call chain.
-     * @param name              a method name.
-     * @param err               an occured error
-     * @param result            (optional) an execution result
-     * @param callback          (optional) an execution callback
-     */
-    instrumentError(correlationId, name, err, result = null, callback = null) {
-        if (err != null) {
-            this._logger.error(correlationId, err, "Failed to call %s method", name);
-            this._counters.incrementOne(name + '.call_errors');
-        }
-        if (callback)
-            callback(err, result);
-    }
+    // /**
+    //  * Adds instrumentation to error handling.
+    //  * 
+    //  * @param correlationId     (optional) transaction id to trace execution through call chain.
+    //  * @param name              a method name.
+    //  * @param err               an occured error
+    //  * @param result            (optional) an execution result
+    //  * @param callback          (optional) an execution callback
+    //  */
+    // protected instrumentError(correlationId: string, name: string, err: any,
+    //     result: any = null, callback: (err: any, result: any) => void = null): void {
+    //     if (err != null) {
+    //         this._logger.error(correlationId, err, "Failed to call %s method", name);
+    //         this._counters.incrementOne(name + '.call_errors');    
+    //     }
+    //     if (callback) callback(err, result);
+    // }
     /**
      * Checks if the component is opened.
      *

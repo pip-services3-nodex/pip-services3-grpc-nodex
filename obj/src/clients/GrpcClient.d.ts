@@ -5,7 +5,8 @@ import { IReferences } from 'pip-services3-commons-nodex';
 import { ConfigParams } from 'pip-services3-commons-nodex';
 import { CompositeLogger } from 'pip-services3-components-nodex';
 import { CompositeCounters } from 'pip-services3-components-nodex';
-import { CounterTiming } from 'pip-services3-components-nodex';
+import { CompositeTracer } from 'pip-services3-components-nodex';
+import { InstrumentTiming } from 'pip-services3-rpc-nodex';
 import { HttpConnectionResolver } from 'pip-services3-rpc-nodex';
 /**
  * Abstract client that calls remove endpoints using GRPC protocol.
@@ -83,8 +84,12 @@ export declare abstract class GrpcClient implements IOpenable, IConfigurable, IR
      */
     protected _counters: CompositeCounters;
     /**
-     * The configuration options.
+     * The tracer.
      */
+    protected _tracer: CompositeTracer;
+    /**
+    * The configuration options.
+    */
     protected _options: ConfigParams;
     /**
      * The connection timeout in milliseconds.
@@ -119,17 +124,7 @@ export declare abstract class GrpcClient implements IOpenable, IConfigurable, IR
      * @param name              a method name.
      * @returns CounterTiming object to end the time measurement.
      */
-    protected instrument(correlationId: string, name: string): CounterTiming;
-    /**
-     * Adds instrumentation to error handling.
-     *
-     * @param correlationId     (optional) transaction id to trace execution through call chain.
-     * @param name              a method name.
-     * @param err               an occured error
-     * @param result            (optional) an execution result
-     * @param callback          (optional) an execution callback
-     */
-    protected instrumentError(correlationId: string, name: string, err: any, result?: any, callback?: (err: any, result: any) => void): void;
+    protected instrument(correlationId: string, name: string): InstrumentTiming;
     /**
      * Checks if the component is opened.
      *

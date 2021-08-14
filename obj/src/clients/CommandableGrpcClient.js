@@ -109,11 +109,11 @@ class CommandableGrpcClient extends GrpcClient_1.GrpcClient {
                 return result;
             }
             catch (ex) {
-                this.instrumentError(correlationId, method, ex);
+                timing.endFailure(ex);
                 throw ex;
             }
             finally {
-                timing.endTiming();
+                timing.endSuccess();
             }
         });
     }

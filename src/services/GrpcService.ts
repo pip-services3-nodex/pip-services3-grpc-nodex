@@ -123,7 +123,7 @@ export abstract class GrpcService implements IOpenable, IConfigurable, IReferenc
     /**
      * The tracer.
      */
-     protected _tracer: CompositeTracer = new CompositeTracer();
+    protected _tracer: CompositeTracer = new CompositeTracer();
 
     public constructor(serviceOrPath: any, serviceName?: string, packageOptions?: any) {
         this._service = (typeof serviceOrPath !== "string") ? serviceOrPath : null;
