@@ -22,4 +22,4 @@ git commit -m "project build by Travis CI [skip ci]"
 
 # Set git tag
 git tag $tag -a -m "Generated tag from GitLabCI for build #$($component.build)"
-git push --tags origin HEAD:master 
+git push --tags origin HEAD:main 
