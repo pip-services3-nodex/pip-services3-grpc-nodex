@@ -12,12 +12,12 @@ The module contains the following packages:
 
 <a name="links"></a> Quick links:
 
-* [Configuration](https://www.pipservices.org/recipies/configuration)
+* [Configuration](http://docs.pipservices.org/toolkit/getting_started/configurations/)
 * [Protocol buffer](https://github.com/pip-services3-nodex/pip-services3-grpc-nodex/blob/master/src/protos/commandable.proto)
 * [API Reference](https://pip-services3-nodex.github.io/pip-services3-grpc-nodex/globals.html)
 * [Change Log](CHANGELOG.md)
-* [Get Help](https://www.pipservices.org/community/help)
-* [Contribute](https://www.pipservices.org/community/contribute)
+* [Get Help](http://docs.pipservices.org/get_help/)
+* [Contribute](http://docs.pipservices.org/contribute/)
 
 ## Use
 
