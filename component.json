@@ -1,6 +1,14 @@
 {
-    "name": "pip-services3-grpc-nodex",
-    "registry": "pipdevs",
+    "name":  "pip-services3-grpc-nodex",
+    "type": "module",
+    "language": "node",
     "version": "1.0.5",
-    "build": 0
+    "build": 0,
+    "registry": "pipdevs",
+    "artifacts": [
+        {
+            "name":  "<name>",
+            "type": "npm"
+        }
+    ]
 }
