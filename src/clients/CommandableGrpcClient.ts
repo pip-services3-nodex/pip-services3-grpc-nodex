@@ -106,12 +106,12 @@ export class CommandableGrpcClient extends GrpcClient {
 
             // Handle regular response
             let result = JSON.parse(response.result_json);
+
+            timing.endTiming();
             return result;
         } catch (ex) {
             timing.endFailure(ex);
             throw ex;
-        } finally {
-            timing.endSuccess();
         }
     }
 }
