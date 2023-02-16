@@ -16,7 +16,7 @@
 // limitations under the License.
 //
 'use strict';
-var grpc = require('grpc');
+var grpc = require('@grpc/grpc-js');
 var dummies_pb = require('./dummies_pb.js');
 
 function serialize_dummies_DummiesPage(arg) {

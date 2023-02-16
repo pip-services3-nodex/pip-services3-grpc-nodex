@@ -157,7 +157,7 @@ class GrpcEndpoint {
                     options.ca = ca;
                 }
                 // Create instance of express application   
-                let grpc = require('grpc');
+                let grpc = require('@grpc/grpc-js');
                 this._server = new grpc.Server();
                 let credentials = connection.getAsStringWithDefault("protocol", 'http') == 'https'
                     ? grpc.ServerCredentials.createSsl(options.ca, options.kvpair)
@@ -247,7 +247,7 @@ class GrpcEndpoint {
     registerCommandableService() {
         if (this._commandableMethods == null)
             return;
-        let grpc = require('grpc');
+        let grpc = require('@grpc/grpc-js');
         let protoLoader = require('@grpc/proto-loader');
         let options = {
             keepCase: true,

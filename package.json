@@ -1,6 +1,6 @@
 {
     "name": "pip-services3-grpc-nodex",
-    "version": "1.0.5",
+    "version": "1.1.0",
     "author": "Conceptual Vision Consulting LLC",
     "description": "GRPC calls for Pip.Services in Node.js / ES2017",
     "contributors": [
@@ -33,26 +33,26 @@
         "watch": "tsc --watch",
         "test": "mocha -t 10000 -R spec -u tdd --recursive ./obj/test",
         "retest": "tsc && mocha -t 10000 -R spec -u tdd --recursive ./obj/test",
-        "protogen": "cd src/protos && npx grpc_tools_node_protoc  --js_out=import_style=commonjs,binary:./ --grpc_out=.  ./commandable.proto",
-        "protogen2": "cd test/protos && npx grpc_tools_node_protoc --js_out=import_style=commonjs,binary:./ --grpc_out=. dummies.proto",
-        "protogen3": "cd test/protos && npx grpc_tools_node_protoc --plugin=protoc-gen-ts=../../node_modules/.bin/protoc-gen-ts --js_out=import_style=commonjs,binary:./ --ts_out=. --grpc_out=. dummies.proto"
+        "protogen": "cd src/protos && npx grpc_tools_node_protoc  --js_out=import_style=commonjs,binary:./ --grpc_out=grpc_js:.  ./commandable.proto",
+        "protogen2": "cd test/protos && npx grpc_tools_node_protoc --js_out=import_style=commonjs,binary:./ --grpc_out=grpc_js:. dummies.proto",
+        "protogen3": "cd test/protos && npx grpc_tools_node_protoc --plugin=protoc-gen-ts=../../node_modules/.bin/protoc-gen-ts --js_out=import_style=commonjs,binary:./ --ts_out=. --grpc_out=grpc_js:. dummies.proto"
     },
     "dependencies": {
-        "@grpc/proto-loader": "^0.4.0",
-        "grpc": "^1.19.0",
-        "grpc-tools": "^1.10.0",
+        "@grpc/grpc-js": "^1.8.9",
+        "@grpc/proto-loader": "^0.7.5",
         "google-protobuf": "^3.7.1",
         "pip-services3-commons-nodex": "^1.0.0",
         "pip-services3-components-nodex": "^1.0.0",
-        "pip-services3-rpc-nodex": "^1.0.0"
+        "pip-services3-rpc-nodex": "^1.3.*"
     },
     "devDependencies": {
         "@types/chai": "^4.0.0",
-        "@types/mocha": "^8.0.0",
+        "@types/mocha": "^10.0.1",
         "@types/node": "*",
         "chai": "^4.3.4",
-        "mocha": "^8.4.0",
+        "grpc-tools": "^1.12.4",
         "grpc_tools_node_protoc_ts": "^5.0.1",
-        "ts-protoc-gen": "^0.9.0"
+        "mocha": "^10.2.0",
+        "ts-protoc-gen": "^0.15.0"
     }
 }

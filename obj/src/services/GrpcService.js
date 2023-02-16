@@ -257,7 +257,7 @@ class GrpcService {
         this._interceptors = [];
         this.register();
         // Load service
-        let grpc = require('grpc');
+        let grpc = require('@grpc/grpc-js');
         let service = this._service;
         // Dynamically load service
         if (service == null && typeof this._protoPath === "string") {

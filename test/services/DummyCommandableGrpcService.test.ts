@@ -1,5 +1,5 @@
 const assert = require('chai').assert;
-const grpc = require('grpc');
+const grpc = require('@grpc/grpc-js');
 const protoLoader = require('@grpc/proto-loader');
 
 let services = require('../../../src/protos/commandable_grpc_pb');

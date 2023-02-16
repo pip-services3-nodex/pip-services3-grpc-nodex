@@ -1,5 +1,5 @@
 const assert = require('chai').assert;
-const grpc = require('grpc');
+const grpc = require('@grpc/grpc-js');
 
 const services = require('../../../test/protos/dummies_grpc_pb');
 const messages = require('../../../test/protos/dummies_pb');

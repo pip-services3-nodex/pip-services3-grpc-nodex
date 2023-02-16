@@ -302,7 +302,7 @@ export abstract class GrpcService implements IOpenable, IConfigurable, IReferenc
         this.register();
     
         // Load service
-        let grpc = require('grpc');
+        let grpc = require('@grpc/grpc-js');
         let service = this._service;
 
         // Dynamically load service

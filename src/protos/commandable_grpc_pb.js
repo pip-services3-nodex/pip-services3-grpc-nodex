@@ -16,7 +16,7 @@
 // limitations under the License.
 //
 'use strict';
-var grpc = require('grpc');
+var grpc = require('@grpc/grpc-js');
 var commandable_pb = require('./commandable_pb.js');
 
 function serialize_commandable_InvokeReply(arg) {

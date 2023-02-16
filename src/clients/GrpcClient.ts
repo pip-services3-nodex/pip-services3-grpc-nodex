@@ -249,7 +249,7 @@ export abstract class GrpcClient implements IOpenable, IConfigurable, IReference
             }
         
             // Create instance of express application   
-            let grpc = require('grpc'); 
+            let grpc = require('@grpc/grpc-js'); 
             
             let credentials = connection.getAsStringWithDefault("protocol", 'http') == 'https' 
                 ? grpc.credentials.createSsl(options.ca, options.key, options.cert)

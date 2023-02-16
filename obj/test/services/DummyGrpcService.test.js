@@ -10,7 +10,7 @@ var __awaiter = (this && this.__awaiter) || function (thisArg, _arguments, P, ge
 };
 Object.defineProperty(exports, "__esModule", { value: true });
 const assert = require('chai').assert;
-const grpc = require('grpc');
+const grpc = require('@grpc/grpc-js');
 const services = require('../../../test/protos/dummies_grpc_pb');
 const messages = require('../../../test/protos/dummies_pb');
 const pip_services3_commons_nodex_1 = require("pip-services3-commons-nodex");

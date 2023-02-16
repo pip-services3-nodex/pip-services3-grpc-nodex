@@ -1,15 +1,25 @@
+// source: commandable.proto
 /**
  * @fileoverview
  * @enhanceable
+ * @suppress {missingRequire} reports error on implicit type usages.
  * @suppress {messageConventions} JS Compiler reports an error if a variable or
  *     field starts with 'MSG_' and isn't a translatable message.
  * @public
  */
 // GENERATED CODE -- DO NOT EDIT!
+/* eslint-disable */
+// @ts-nocheck
 
 var jspb = require('google-protobuf');
 var goog = jspb;
-var global = Function('return this')();
+var global = (function() {
+  if (this) { return this; }
+  if (typeof window !== 'undefined') { return window; }
+  if (typeof global !== 'undefined') { return global; }
+  if (typeof self !== 'undefined') { return self; }
+  return Function('return this')();
+}.call(null));
 
 goog.exportSymbol('proto.commandable.ErrorDescription', null, global);
 goog.exportSymbol('proto.commandable.InvokeReply', null, global);
@@ -82,13 +92,15 @@ if (goog.DEBUG && !COMPILED) {
 
 if (jspb.Message.GENERATE_TO_OBJECT) {
 /**
- * Creates an object representation of this proto suitable for use in Soy templates.
+ * Creates an object representation of this proto.
  * Field names that are reserved in JavaScript and will be renamed to pb_name.
+ * Optional fields that are not set will be set to undefined.
  * To access a reserved field use, foo.pb_<name>, eg, foo.pb_default.
  * For the list of reserved names please see:
- *     com.google.apps.jspb.JsClassTemplate.JS_RESERVED_WORDS.
- * @param {boolean=} opt_includeInstance Whether to include the JSPB instance
- *     for transitional soy proto support: http://goto/soy-param-migration
+ *     net/proto2/compiler/js/internal/generator.cc#kKeyword.
+ * @param {boolean=} opt_includeInstance Deprecated. whether to include the
+ *     JSPB instance for transitional soy proto support:
+ *     http://goto/soy-param-migration
  * @return {!Object}
  */
 proto.commandable.ErrorDescription.prototype.toObject = function(opt_includeInstance) {
@@ -98,8 +110,8 @@ proto.commandable.ErrorDescription.prototype.toObject = function(opt_includeInst
 
 /**
  * Static version of the {@see toObject} method.
- * @param {boolean|undefined} includeInstance Whether to include the JSPB
- *     instance for transitional soy proto support:
+ * @param {boolean|undefined} includeInstance Deprecated. Whether to include
+ *     the JSPB instance for transitional soy proto support:
  *     http://goto/soy-param-migration
  * @param {!proto.commandable.ErrorDescription} msg The msg instance to transform.
  * @return {!Object}
@@ -182,7 +194,7 @@ proto.commandable.ErrorDescription.deserializeBinaryFromReader = function(msg, r
     case 8:
       var value = msg.getDetailsMap();
       reader.readMessage(value, function(message, reader) {
-        jspb.Map.deserializeBinary(message, reader, jspb.BinaryReader.prototype.readString, jspb.BinaryReader.prototype.readString, null, "");
+        jspb.Map.deserializeBinary(message, reader, jspb.BinaryReader.prototype.readString, jspb.BinaryReader.prototype.readString, null, "", "");
          });
       break;
     default:
@@ -279,9 +291,12 @@ proto.commandable.ErrorDescription.prototype.getCategory = function() {
 };
 
 
-/** @param {string} value */
+/**
+ * @param {string} value
+ * @return {!proto.commandable.ErrorDescription} returns this
+ */
 proto.commandable.ErrorDescription.prototype.setCategory = function(value) {
-  jspb.Message.setProto3StringField(this, 1, value);
+  return jspb.Message.setProto3StringField(this, 1, value);
 };
 
 
@@ -294,9 +309,12 @@ proto.commandable.ErrorDescription.prototype.getCode = function() {
 };
 
 
-/** @param {string} value */
+/**
+ * @param {string} value
+ * @return {!proto.commandable.ErrorDescription} returns this
+ */
 proto.commandable.ErrorDescription.prototype.setCode = function(value) {
-  jspb.Message.setProto3StringField(this, 2, value);
+  return jspb.Message.setProto3StringField(this, 2, value);
 };
 
 
@@ -309,9 +327,12 @@ proto.commandable.ErrorDescription.prototype.getCorrelationId = function() {
 };
 
 
-/** @param {string} value */
+/**
+ * @param {string} value
+ * @return {!proto.commandable.ErrorDescription} returns this
+ */
 proto.commandable.ErrorDescription.prototype.setCorrelationId = function(value) {
-  jspb.Message.setProto3StringField(this, 3, value);
+  return jspb.Message.setProto3StringField(this, 3, value);
 };
 
 
@@ -324,9 +345,12 @@ proto.commandable.ErrorDescription.prototype.getStatus = function() {
 };
 
 
-/** @param {number} value */
+/**
+ * @param {number} value
+ * @return {!proto.commandable.ErrorDescription} returns this
+ */
 proto.commandable.ErrorDescription.prototype.setStatus = function(value) {
-  jspb.Message.setProto3IntField(this, 4, value);
+  return jspb.Message.setProto3IntField(this, 4, value);
 };
 
 
@@ -339,9 +363,12 @@ proto.commandable.ErrorDescription.prototype.getMessage = function() {
 };
 
 
-/** @param {string} value */
+/**
+ * @param {string} value
+ * @return {!proto.commandable.ErrorDescription} returns this
+ */
 proto.commandable.ErrorDescription.prototype.setMessage = function(value) {
-  jspb.Message.setProto3StringField(this, 5, value);
+  return jspb.Message.setProto3StringField(this, 5, value);
 };
 
 
@@ -354,9 +381,12 @@ proto.commandable.ErrorDescription.prototype.getCause = function() {
 };
 
 
-/** @param {string} value */
+/**
+ * @param {string} value
+ * @return {!proto.commandable.ErrorDescription} returns this
+ */
 proto.commandable.ErrorDescription.prototype.setCause = function(value) {
-  jspb.Message.setProto3StringField(this, 6, value);
+  return jspb.Message.setProto3StringField(this, 6, value);
 };
 
 
@@ -369,9 +399,12 @@ proto.commandable.ErrorDescription.prototype.getStackTrace = function() {
 };
 
 
-/** @param {string} value */
+/**
+ * @param {string} value
+ * @return {!proto.commandable.ErrorDescription} returns this
+ */
 proto.commandable.ErrorDescription.prototype.setStackTrace = function(value) {
-  jspb.Message.setProto3StringField(this, 7, value);
+  return jspb.Message.setProto3StringField(this, 7, value);
 };
 
 
@@ -390,10 +423,11 @@ proto.commandable.ErrorDescription.prototype.getDetailsMap = function(opt_noLazy
 
 /**
  * Clears values from the map. The map will be non-null.
+ * @return {!proto.commandable.ErrorDescription} returns this
  */
 proto.commandable.ErrorDescription.prototype.clearDetailsMap = function() {
   this.getDetailsMap().clear();
-};
+  return this;};
 
 
 
@@ -401,13 +435,15 @@ proto.commandable.ErrorDescription.prototype.clearDetailsMap = function() {
 
 if (jspb.Message.GENERATE_TO_OBJECT) {
 /**
- * Creates an object representation of this proto suitable for use in Soy templates.
+ * Creates an object representation of this proto.
  * Field names that are reserved in JavaScript and will be renamed to pb_name.
+ * Optional fields that are not set will be set to undefined.
  * To access a reserved field use, foo.pb_<name>, eg, foo.pb_default.
  * For the list of reserved names please see:
- *     com.google.apps.jspb.JsClassTemplate.JS_RESERVED_WORDS.
- * @param {boolean=} opt_includeInstance Whether to include the JSPB instance
- *     for transitional soy proto support: http://goto/soy-param-migration
+ *     net/proto2/compiler/js/internal/generator.cc#kKeyword.
+ * @param {boolean=} opt_includeInstance Deprecated. whether to include the
+ *     JSPB instance for transitional soy proto support:
+ *     http://goto/soy-param-migration
  * @return {!Object}
  */
 proto.commandable.InvokeRequest.prototype.toObject = function(opt_includeInstance) {
@@ -417,8 +453,8 @@ proto.commandable.InvokeRequest.prototype.toObject = function(opt_includeInstanc
 
 /**
  * Static version of the {@see toObject} method.
- * @param {boolean|undefined} includeInstance Whether to include the JSPB
- *     instance for transitional soy proto support:
+ * @param {boolean|undefined} includeInstance Deprecated. Whether to include
+ *     the JSPB instance for transitional soy proto support:
  *     http://goto/soy-param-migration
  * @param {!proto.commandable.InvokeRequest} msg The msg instance to transform.
  * @return {!Object}
@@ -428,7 +464,7 @@ proto.commandable.InvokeRequest.toObject = function(includeInstance, msg) {
   var f, obj = {
     method: jspb.Message.getFieldWithDefault(msg, 1, ""),
     correlationId: jspb.Message.getFieldWithDefault(msg, 2, ""),
-    argsEmpty: jspb.Message.getFieldWithDefault(msg, 3, false),
+    argsEmpty: jspb.Message.getBooleanFieldWithDefault(msg, 3, false),
     argsJson: jspb.Message.getFieldWithDefault(msg, 4, "")
   };
 
@@ -551,9 +587,12 @@ proto.commandable.InvokeRequest.prototype.getMethod = function() {
 };
 
 
-/** @param {string} value */
+/**
+ * @param {string} value
+ * @return {!proto.commandable.InvokeRequest} returns this
+ */
 proto.commandable.InvokeRequest.prototype.setMethod = function(value) {
-  jspb.Message.setProto3StringField(this, 1, value);
+  return jspb.Message.setProto3StringField(this, 1, value);
 };
 
 
@@ -566,26 +605,30 @@ proto.commandable.InvokeRequest.prototype.getCorrelationId = function() {
 };
 
 
-/** @param {string} value */
+/**
+ * @param {string} value
+ * @return {!proto.commandable.InvokeRequest} returns this
+ */
 proto.commandable.InvokeRequest.prototype.setCorrelationId = function(value) {
-  jspb.Message.setProto3StringField(this, 2, value);
+  return jspb.Message.setProto3StringField(this, 2, value);
 };
 
 
 /**
  * optional bool args_empty = 3;
- * Note that Boolean fields may be set to 0/1 when serialized from a Java server.
- * You should avoid comparisons like {@code val === true/false} in those cases.
  * @return {boolean}
  */
 proto.commandable.InvokeRequest.prototype.getArgsEmpty = function() {
-  return /** @type {boolean} */ (jspb.Message.getFieldWithDefault(this, 3, false));
+  return /** @type {boolean} */ (jspb.Message.getBooleanFieldWithDefault(this, 3, false));
 };
 
 
-/** @param {boolean} value */
+/**
+ * @param {boolean} value
+ * @return {!proto.commandable.InvokeRequest} returns this
+ */
 proto.commandable.InvokeRequest.prototype.setArgsEmpty = function(value) {
-  jspb.Message.setProto3BooleanField(this, 3, value);
+  return jspb.Message.setProto3BooleanField(this, 3, value);
 };
 
 
@@ -598,9 +641,12 @@ proto.commandable.InvokeRequest.prototype.getArgsJson = function() {
 };
 
 
-/** @param {string} value */
+/**
+ * @param {string} value
+ * @return {!proto.commandable.InvokeRequest} returns this
+ */
 proto.commandable.InvokeRequest.prototype.setArgsJson = function(value) {
-  jspb.Message.setProto3StringField(this, 4, value);
+  return jspb.Message.setProto3StringField(this, 4, value);
 };
 
 
@@ -609,13 +655,15 @@ proto.commandable.InvokeRequest.prototype.setArgsJson = function(value) {
 
 if (jspb.Message.GENERATE_TO_OBJECT) {
 /**
- * Creates an object representation of this proto suitable for use in Soy templates.
+ * Creates an object representation of this proto.
  * Field names that are reserved in JavaScript and will be renamed to pb_name.
+ * Optional fields that are not set will be set to undefined.
  * To access a reserved field use, foo.pb_<name>, eg, foo.pb_default.
  * For the list of reserved names please see:
- *     com.google.apps.jspb.JsClassTemplate.JS_RESERVED_WORDS.
- * @param {boolean=} opt_includeInstance Whether to include the JSPB instance
- *     for transitional soy proto support: http://goto/soy-param-migration
+ *     net/proto2/compiler/js/internal/generator.cc#kKeyword.
+ * @param {boolean=} opt_includeInstance Deprecated. whether to include the
+ *     JSPB instance for transitional soy proto support:
+ *     http://goto/soy-param-migration
  * @return {!Object}
  */
 proto.commandable.InvokeReply.prototype.toObject = function(opt_includeInstance) {
@@ -625,8 +673,8 @@ proto.commandable.InvokeReply.prototype.toObject = function(opt_includeInstance)
 
 /**
  * Static version of the {@see toObject} method.
- * @param {boolean|undefined} includeInstance Whether to include the JSPB
- *     instance for transitional soy proto support:
+ * @param {boolean|undefined} includeInstance Deprecated. Whether to include
+ *     the JSPB instance for transitional soy proto support:
  *     http://goto/soy-param-migration
  * @param {!proto.commandable.InvokeReply} msg The msg instance to transform.
  * @return {!Object}
@@ -635,7 +683,7 @@ proto.commandable.InvokeReply.prototype.toObject = function(opt_includeInstance)
 proto.commandable.InvokeReply.toObject = function(includeInstance, msg) {
   var f, obj = {
     error: (f = msg.getError()) && proto.commandable.ErrorDescription.toObject(includeInstance, f),
-    resultEmpty: jspb.Message.getFieldWithDefault(msg, 2, false),
+    resultEmpty: jspb.Message.getBooleanFieldWithDefault(msg, 2, false),
     resultJson: jspb.Message.getFieldWithDefault(msg, 3, "")
   };
 
@@ -750,17 +798,21 @@ proto.commandable.InvokeReply.prototype.getError = function() {
 };
 
 
-/** @param {?proto.commandable.ErrorDescription|undefined} value */
+/**
+ * @param {?proto.commandable.ErrorDescription|undefined} value
+ * @return {!proto.commandable.InvokeReply} returns this
+*/
 proto.commandable.InvokeReply.prototype.setError = function(value) {
-  jspb.Message.setWrapperField(this, 1, value);
+  return jspb.Message.setWrapperField(this, 1, value);
 };
 
 
 /**
  * Clears the message field making it undefined.
+ * @return {!proto.commandable.InvokeReply} returns this
  */
 proto.commandable.InvokeReply.prototype.clearError = function() {
-  this.setError(undefined);
+  return this.setError(undefined);
 };
 
 
@@ -775,18 +827,19 @@ proto.commandable.InvokeReply.prototype.hasError = function() {
 
 /**
  * optional bool result_empty = 2;
- * Note that Boolean fields may be set to 0/1 when serialized from a Java server.
- * You should avoid comparisons like {@code val === true/false} in those cases.
  * @return {boolean}
  */
 proto.commandable.InvokeReply.prototype.getResultEmpty = function() {
-  return /** @type {boolean} */ (jspb.Message.getFieldWithDefault(this, 2, false));
+  return /** @type {boolean} */ (jspb.Message.getBooleanFieldWithDefault(this, 2, false));
 };
 
 
-/** @param {boolean} value */
+/**
+ * @param {boolean} value
+ * @return {!proto.commandable.InvokeReply} returns this
+ */
 proto.commandable.InvokeReply.prototype.setResultEmpty = function(value) {
-  jspb.Message.setProto3BooleanField(this, 2, value);
+  return jspb.Message.setProto3BooleanField(this, 2, value);
 };
 
 
@@ -799,9 +852,12 @@ proto.commandable.InvokeReply.prototype.getResultJson = function() {
 };
 
 
-/** @param {string} value */
+/**
+ * @param {string} value
+ * @return {!proto.commandable.InvokeReply} returns this
+ */
 proto.commandable.InvokeReply.prototype.setResultJson = function(value) {
-  jspb.Message.setProto3StringField(this, 3, value);
+  return jspb.Message.setProto3StringField(this, 3, value);
 };
 
 
